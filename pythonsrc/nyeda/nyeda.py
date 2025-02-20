@@ -20,8 +20,10 @@ import subprocess
 import tempfile
 import pickle
 import sys
-import pwd
 import os
+
+if sys.platform == 'darwin':
+    import pwd
 
 if sys.platform == 'win32':
     import shutil
