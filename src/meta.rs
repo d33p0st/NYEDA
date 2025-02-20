@@ -6,6 +6,11 @@ use whoami;
 use serde::{Serialize, Deserialize};
 use pyo3::prelude::*;
 
+#[cfg(target_os = "windows")]
+use winreg::enums::HKEY_LOCAL_MACHINE;
+#[cfg(target_os = "windows")]
+use winreg::RegKey;
+
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub struct MetaData {
     pub version: u8,
@@ -53,13 +58,9 @@ impl MetaData {
 
         #[cfg(target_os = "windows")]
         {
-            use winreg::enums::HKEY_LOCAL_MACHINE;
-            use winreg::RegKey;
-
             let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
             let key = hklm.open_subkey("SOFTWARE\\Microsoft\\Cryptography").ok()?;
             key.get_value("MachineGuid").ok()
-
         }
 
         #[cfg(target_os = "macos")]
