@@ -1,0 +1,33 @@
+[build-system]
+requires = ["maturin>=1.4, <2.0"]
+build-backend = "maturin"
+
+[project]
+name = "NYEDA"
+version = "1.0"
+description = "Not your everyday archive (NYEDA) makes self protecting environment aware archives to tackle data-leaks."
+authors = [{name="Soumyo Deep Gupta", email="deep@d33p0st.in"}]
+requires-python = ">=3.13"
+dependencies = [
+    'colorama',
+    'cryptography',
+    'screeninfo',
+    'tkinterdnd2',
+    'customtkinter',
+    'pillow'
+]
+classifiers = [
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Development Status :: 3 - Alpha",
+    "Operating System :: OS Independent",
+]
+license = { file = "LICENSE" }
+
+[project.scripts]
+"nyeda" = 'nyeda.nyeda:nyeda'
+
+[tool.maturin]
+python-source = "pythonsrc"
+module-name = "nyeda.bin.sharedobject"
+include = ["NYEDA/**/*.pyi"]

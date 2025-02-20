@@ -1,0 +1,71 @@
+SOFTWARE LICENSE AGREEMENT
+For NYEDA (Not Your EveryDay Archive) Software
+
+IMPORTANT: READ THIS AGREEMENT CAREFULLY BEFORE USING THE SOFTWARE
+
+1. DEFINITIONS
+"Software" refers to the environment-aware security software and all its components
+"Licensor" refers to the creator and patent holder of the Software
+"User" refers to any individual or entity using the Software
+"Environment" refers to the specific computing environment where data is processed
+
+2. LICENSE GRANT
+Subject to the terms of this Agreement, Licensor grants User a non-exclusive, non-transferable license to use the Software solely for security purposes.
+
+4. DISCLAIMER OF WARRANTIES
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. LICENSOR EXPLICITLY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO:
+a) MERCHANTABILITY
+b) FITNESS FOR A PARTICULAR PURPOSE
+c) NON-INFRINGEMENT
+d) DATA INTEGRITY OR PRESERVATION
+e) SYSTEM COMPATIBILITY
+
+5. LIMITATION OF LIABILITY
+5.1 IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY DAMAGES (INCLUDING, WITHOUT LIMITATION, LOST PROFITS, BUSINESS INTERRUPTION, OR LOST INFORMATION) ARISING OUT OF USE OR INABILITY TO USE THE SOFTWARE.
+
+5.2 LICENSOR SHALL NOT BE LIABLE FOR:
+a) Loss of data due to self-destruction features
+b) System incompatibilities or environment detection errors
+c) Any consequential, indirect, incidental, special, or punitive damages
+d) Data corruption or loss during encryption/decryption processes
+e) Any damages resulting from unauthorized access attempts
+
+6. USER RESPONSIBILITIES
+User agrees to:
+a) Use the Software only for legitimate security purposes
+b) Maintain adequate data backups
+c) Test compatibility before deploying in critical systems
+d) Accept all risks associated with data transformation
+e) Not attempt to circumvent security features
+
+7. INTELLECTUAL PROPERTY
+7.1 The Software is protected by intellectual property laws and treaties.
+7.2 All patents, copyrights, trade secrets, and other rights remain the exclusive property of Licensor.
+
+8. PROHIBITED USES
+User shall not:
+a) Reverse engineer, decompile, or disassemble the Software
+b) Use the Software for illegal purposes
+c) Attempt to bypass security measures
+d) Create derivative works
+e) Transfer license rights to third parties
+
+9. INDEMNIFICATION
+User agrees to indemnify and hold Licensor harmless from any claims, damages, or expenses arising from:
+a) Misuse of the Software
+b) Violation of this Agreement
+c) Data loss or corruption
+d) Unauthorized access attempts
+e) Environmental compatibility issues
+
+10. TERMINATION
+10.1 This license terminates automatically if User breaches any term.
+10.2 Upon termination, User must cease all use and destroy all copies.
+
+11. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with the laws of India. Any disputes arising under or in connection with this Agreement shall be subject to the exclusive jurisdiction of the courts in Delhi, India. This Agreement shall be governed by the Information Technology Act, 2000, the Copyright Act, 1957, the Patents Act, 1970, and the Indian Contract Act, 1872, as applicable.
+
+12. ACKNOWLEDGMENT
+BY USING THE SOFTWARE, USER ACKNOWLEDGES READING AND UNDERSTANDING THIS AGREEMENT AND AGREES TO BE BOUND BY ITS TERMS AND CONDITIONS.
+
+Last Updated: February 13, 2025
