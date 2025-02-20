@@ -14,7 +14,8 @@ dependencies = [
     'screeninfo',
     'tkinterdnd2',
     'customtkinter',
-    'pillow'
+    'pillow',
+    'argpi',
 ]
 classifiers = [
     "Programming Language :: Python :: 3.13",
