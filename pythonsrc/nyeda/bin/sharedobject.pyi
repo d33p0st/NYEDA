@@ -1,6 +1,7 @@
 
 from typing import Type, Dict, List
 from typing import TYPE_CHECKING
+import sys
 
 if TYPE_CHECKING:    
     class bundle:
@@ -94,27 +95,49 @@ if TYPE_CHECKING:
                 `DoD 5220.22-M` secure delete standard."""
         SecureDelete: Type[_6494856343047591817]
     
-    class macos:
-        """macos [`Module`].
-        
-        Contains the `MacosSRCD` class for single shot screenrecord/capture
-        apps in macos.
-        """
-        class _5335542801870967125:
-            """Macos Screen Record/Capture Detection [`class`].
+    if sys.platform == 'darwin':
+        class macos:
+            """macos [`Module`].
             
-            ... detects in a single shot if any supported screencapture
-            app is running in this instant.
+            Contains the `MacosSRCD` class for single shot detection of
+            screenrecord/capture apps in macos.
             """
-            def __init__(self) -> None: """Initialize the detector."""
-            def detect(self) -> bool: """Detect screencapture in this instant."""
-            def kill(self) -> None:
-                """Kill if any screencapture app is found in this instant."""
-        MacosSRCD: Type[_5335542801870967125]
+            class _5335542801870967125:
+                """Macos Screen Record/Capture Detection [`class`].
+                
+                ... detects in a single shot if any supported screencapture
+                app is running in this instant.
+                """
+                def __init__(self) -> None: """Initialize the detector."""
+                def detect(self) -> bool: """Detect screencapture in this instant."""
+                def kill(self) -> None:
+                    """Kill if any screencapture app is found in this instant."""
+            MacosSRCD: Type[_5335542801870967125]
+    elif sys.platform == 'win32':
+        class windows:
+            """windows [`Module`].
+            
+            Contains the `WindowsSRCD` class for single shot detection of
+            screenrecord/capture apps in windows
+            """
+            class _3859921643423807587:
+                """Windows Screen Record/Capture Detection [`class`].
+                
+                ... detects in a single shot if any suported screencapture
+                app is running in this instant.
+                """
+                def __init__(self) -> None: """Initialize the detector."""
+                def detect(self) -> bool: """Detect screencapture in this instant."""
+                def kill(self) -> None:
+                    """Kill if any screencapture app is found in this instant."""
+            WindowsSRCD: Type[_3859921643423807587]
 else:
     secure_delete: object
     validation: object
     bundle: object
-    macos: object
+    if sys.platform == 'darwin':
+        macos: object
+    elif sys.platform == 'win32':
+        windows: object
 
 __all__ = ['bundle']

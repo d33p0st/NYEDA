@@ -1,46 +1,54 @@
 
-
 use std::collections::HashSet;
 use std::process::Command;
 use pyo3::prelude::*;
 
+
 #[pyclass]
 #[derive(Debug)]
-pub struct MacosSRCD {
+pub struct WindowsSRCD {
     sus: HashSet<String>,
     alr: HashSet<String>,
 }
 
+
 #[pymethods]
-impl MacosSRCD {
+impl WindowsSRCD {
     #[new]
     fn new() -> Self {
         Self {
             sus: [
-                "QuickTime Player",
-                "QuickTimePlayer",
-                "screencapture",
-                "ScreenFlow",
-                "Snip",
-                "obs",
-                "OBS",
+                "OBS Studio",
+                "obs64",
+                "obs32",
+                "Bandicam",
+                "bdcam",
                 "Camtasia",
+                "CamtasiaStudio",
+                "ScreenRec",
+                "ShareX",
+                "XSplit",
+                "FlashBack",
+                "ScreenToGif",
                 "Loom",
-                "Screen Recording",
-                "Screenshot",
-                "com.apple.screencapture",
-                "com.apple.QuickTimePlayerX",
+                "Xbox Game Bar",
+                "GameBar",
+                "SnippingTool",
+                "ScreenClip",
+                "Windows.Screen",
             ].iter().map(|s| s.to_string()).collect(),
             alr: HashSet::new(),
         }
     }
 
     fn _get_alr_processes(&self) -> HashSet<String> {
-        let output = Command::new("ps")
-            .arg("aux")
+        let output = Command::new("tasklist")
+            .arg("/FO")
+            .arg("CSV")
+            .arg("/NH")
             .output()
             .unwrap_or_else(|e| {
-                eprintln!("💣🖥️ ps command not found! - {}", e);
+                eprintln!("💣🖥️ tasklist command failed! - {}", e);
                 std::process::exit(1);
             });
 
@@ -48,34 +56,33 @@ impl MacosSRCD {
         let processes: HashSet<String> = out_str
             .lines()
             .filter_map(|line| {
-                let parts: Vec<&str> = line.split_whitespace().collect();
-                if parts.len() > 10 {
-                    Some(parts[10].to_string()) // process name
+                let parts: Vec<&str> = line.split(',').collect();
+                if parts.len() > 0 {
+                    // Remove quotes from process name
+                    Some(parts[0].trim_matches('"').to_string())
                 } else {
                     None
                 }
             }).collect();
-        
         processes
     }
 
     fn _detect_new(&mut self) -> bool {
         let current_apps = self._get_alr_processes();
-
         let new_sus_apps: Vec<String> = current_apps
             .difference(&self.alr)
             .filter(|app| self.sus.iter().any(|sus| app.contains(sus)))
             .cloned()
             .collect();
+        
         self.alr = current_apps;
-
+        
         if !new_sus_apps.is_empty() {
             for app in &new_sus_apps {
                 println!("⚠️ Warning: New screen recording app detected -> {}", app);
                 return true;
             }
         }
-
         false
     }
 
@@ -86,16 +93,16 @@ impl MacosSRCD {
 
     fn kill(&mut self) -> PyResult<()> {
         let running_apps = self._get_alr_processes();
-
         for app in running_apps {
             if self.sus.iter().any(|sus| app.contains(sus)) {
                 println!("❌ Terminating suspicious app: {}", app);
-                let _ = Command::new("pkill")
-                    .arg("-f")
+                let _ = Command::new("taskkill")
+                    .arg("/F")
+                    .arg("/IM")
                     .arg(&app)
                     .output()
                     .unwrap_or_else(|e| {
-                        eprintln!("💣🖥️ pkill command failure: {}", e);
+                        eprintln!("💣🖥️ taskkill command failure: {}", e);
                         std::process::exit(1);
                     });
             }

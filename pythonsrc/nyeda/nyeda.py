@@ -23,6 +23,9 @@ import sys
 import pwd
 import os
 
+if sys.platform == 'win32':
+    import shutil
+
 class Nyeda(bundler, encrypter, base64tools):
     def __init__(
             self,
@@ -105,10 +108,6 @@ class Nyeda(bundler, encrypter, base64tools):
             self.destination.parent.mkdir(parents=True, exist_ok=True)
 
             if sys.platform == 'darwin': # MacOS
-                # shutil.copytree(
-                #     Path(workdirectory, 'dist', self.destination.name + '.app'),
-                #     Path(self.destination.parent, self.destination.name + '.app')
-                # )
                 os.system(f"sudo cp -r {Path(workdirectory, 'dist', self.destination.name + '.app')} {Path(self.destination.parent, self.destination.name + '.app')}")
                 os.chdir(self.destination.parent)
                 os.system(f"sudo rm -rf {workdirectory}")
@@ -119,12 +118,20 @@ class Nyeda(bundler, encrypter, base64tools):
 
                 return Path(self.destination.parent, self.destination.name + '.app')
             elif sys.platform == 'win32': # Windows
-                # shutil.copytree(
-                #     Path(workdirectory, 'dist', self.destination.name + '.exe'),
-                #     Path(self.destination.parent, self.destination.name + '.exe')
-                # )
-                # return Path(self.destination.parent, self.destination.name + '.exe')
-                return None
+                try:
+                    subprocess.check_call(['robocopy', str(Path(workdirectory, 'dist')), str(self.destination.parent), self.destination.name + '.exe'])
+                except subprocess.CalledProcessError as e:
+                    return NYEDASEG(NYEDAException, 'Build error!', str(e))
+                
+                os.chdir(self.destination.parent)
+                shutil.rmtree(workdirectory)
+
+                try:
+                    subprocess.check_call(['icacls', str(Path(self.destination.parent, self.destination.name + '.exe')), '/grant', 'Users:(RXF)', '/grant', 'Administrators:(F)'])
+                except subprocess.CalledProcessError as e:
+                    return NYEDASEG(NYEDAException, 'Build error!', str(e))
+
+                return Path(self.destination.parent, self.destination.name + '.exe')
             else:
     #             shutil.copyfile(
     #                 Path(workdirectory, 'dist', self.destination.name),

@@ -17,6 +17,9 @@ import sys
 if sys.platform == 'darwin':
     from nyeda.bin.sharedobject import macos
 
+if sys.platform == 'win32':
+    from nyeda.bin.sharedobject import windows
+
 class segmenter(preproc, dismantler, dirtools, mastertools):
     def __init__(self, content: Any, thisfile: str, overwrites: int = 5) -> None:
         # set the global class variable
@@ -41,6 +44,8 @@ class segmenter(preproc, dismantler, dirtools, mastertools):
         # set watchman
         if sys.platform == 'darwin':
             self.__watchman__ = macos.MacosSRCD()
+        elif sys.platform == 'win32':
+            self.__watchman__ = windows.WindowsSRCD()
 
         # Bind the master for focus out
         self.__master__.focus_force()
