@@ -142,18 +142,19 @@ class Nyeda(bundler, encrypter, base64tools):
     #             return Path(self.destination.parent, self.destination.name)
                 return None
 
-    def _apply_recursive_permission_grant(self, path: Path, user: pwd.struct_passwd) -> None:
-        uid_gid = f"{user.pw_uid}:{user.pw_gid}"
+    if sys.platform == 'darwin':
+        def _apply_recursive_permission_grant(self, path: Path, user: pwd.struct_passwd) -> None:
+            uid_gid = f"{user.pw_uid}:{user.pw_gid}"
 
-        # Change ownership of the directory itself
-        os.system(f"sudo chown {uid_gid} '{path}'")
+            # Change ownership of the directory itself
+            os.system(f"sudo chown {uid_gid} '{path}'")
 
-        # Change ownership of the directory contents
-        for root, _, files in os.walk(str(path)):
-            os.system(f"sudo chown {uid_gid} '{root}'")
+            # Change ownership of the directory contents
+            for root, _, files in os.walk(str(path)):
+                os.system(f"sudo chown {uid_gid} '{root}'")
 
-            for file in files:
-                os.system(f"sudo chown {uid_gid} '{os.path.join(root, file)}'")
+                for file in files:
+                    os.system(f"sudo chown {uid_gid} '{os.path.join(root, file)}'")
 
 # script
 from argpi import PathWays, Definition
