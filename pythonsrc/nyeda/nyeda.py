@@ -123,10 +123,8 @@ class Nyeda(bundler, encrypter, base64tools):
                 os.chdir(self.destination.parent)
                 shutil.rmtree(workdirectory)
 
-                try:
-                    subprocess.check_call(['icacls', str(Path(self.destination.parent, self.destination.name + '.exe')), '/grant', 'Users:(RXF)', '/grant', 'Administrators:(F)'])
-                except subprocess.CalledProcessError as e:
-                    return NYEDASEG(NYEDAException, 'Build error!', str(e))
+                try:subprocess.check_call(['icacls', str(Path(self.destination.parent, self.destination.name + '.exe')), '/grant', 'Users:(RX)', '/grant', 'Administrators:(F)'])
+                except subprocess.CalledProcessError as e: return NYEDASEG(NYEDAException, 'Build error!', str(e))
 
                 return Path(self.destination.parent, self.destination.name + '.exe')
             else:
