@@ -249,7 +249,7 @@ class ScriptCfg:
         sys.exit(0)
 
 def getsuperuser():
-    if sys.platform == 'win32' and ctypes.windll.shell32.IsUserAnAdmin(): return NYEDASEG(NYEDAException, 'Use an administrator terminal to run this command!')
+    if sys.platform == 'win32' and bool(ctypes.windll.shell32.IsUserAnAdmin()): return NYEDASEG(NYEDAException, 'Use an administrator terminal to run this command!')
     else: 
         if os.geteuid()!= 0: 
             return NYEDASEG(NYEDAException, 'Use super user priviledges to run this command!')
