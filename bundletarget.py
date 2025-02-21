@@ -13,8 +13,10 @@ from nyeda.features.bundler import bundler
 from nyeda.features.encdec import encrypter
 from nyeda.features.encdec import base64tools
 from nyeda.exceptions import NYEDAException, NYEDASEG
+from nyeda.pyinstaller_main import run as pyinstaller
 
 from pathlib import Path
+
 
 import subprocess
 import tempfile
@@ -88,9 +90,9 @@ class Nyeda(bundler, encrypter, base64tools):
             
             # setup pyinstaller commands
             if sys.platform == 'darwin':
-                build = ['sudo', 'pyinstaller', '--onefile', '--clean', '--noconfirm', '--name', self.destination.name]
+                build = ['--onefile', '--clean', '--noconfirm', '--name', self.destination.name]
             else:
-                build = ['pyinstaller', '--onefile', '--clean', '--noconfirm', '--name', self.destination.name]
+                build = ['--onefile', '--clean', '--noconfirm', '--name', self.destination.name]
 
             # Modify build based on os requirements
             if sys.platform == 'win32':
@@ -102,8 +104,8 @@ class Nyeda(bundler, encrypter, base64tools):
             build.append(str(Path(workdirectory, self.destination.name + '.py')))
 
             # Execute PyInstaller
-            try: subprocess.check_call(build)
-            except subprocess.CalledProcessError as e: return NYEDASEG(NYEDAException, 'Buil error!', str(e))
+            try: pyinstaller(build)
+            except Exception as e: return NYEDASEG(NYEDAException, 'Build error!', str(e))
 
             # Move the created dist/name(.app (in macos), .exe (in windows)) to destination
             if sys.platform == 'darwin': # MacOS
@@ -113,7 +115,11 @@ class Nyeda(bundler, encrypter, base64tools):
 
                 # As it might be run as root, change
                 # all permissions to the sudoer
-                self._apply_recursive_permission_grant(Path(self.destination.parent, self.destination.name + '.app'), pwd.getpwnam(os.popen('whoami').read().replace('\n', '')))
+                if 'SUDO_USER' in os.environ:
+                    user = os.environ.get('SUDO_USER')
+                else:
+                    user = os.popen('whoami').read().replace('\n', '')
+                self._apply_recursive_permission_grant(Path(self.destination.parent, self.destination.name + '.app'), pwd.getpwnam(user))
 
                 return Path(self.destination.parent, self.destination.name + '.app')
             elif sys.platform == 'win32': # Windows
@@ -264,14 +270,15 @@ def nyeda():
     pathway.register('--salted', cfg.SALT, 'EXEC', what_value_expected='Single', ignore_if_not_present=True)
     pathway.orchestrate
 
-    if pathway.if_exec('--help') is False and (pathway.if_exec('--source') is False or pathway.if_exec('--destination') is False): return cfg.HELP()
+    print(cfg.source)
+
     if pathway.if_exec('--help'): return None
-    if not pathway.if_exec('--source'): return NYEDASEG(NYEDAException, 'source must be given as an argument!')
-    if not pathway.if_exec('--destination'): return NYEDASEG(NYEDAException, 'destination must be given as an argument!')
+    # if pathway.if_exec('--help') is False and (pathway.if_exec('--source') is False or pathway.if_exec('--destination') is False): return cfg.HELP()
+    # if not pathway.if_exec('--source'): return NYEDASEG(NYEDAException, 'source must be given as an argument!')
+    # if not pathway.if_exec('--destination'): return NYEDASEG(NYEDAException, 'destination must be given as an argument!')
 
     if cfg.encrypt:
-        if sys.platform == 'win32':
-            getsuperuser()
+        getsuperuser()
         _nyeda = Nyeda(cfg.source, cfg.destination, encrypt=True, passkey=cfg.passkey, salt=cfg.salt)
         archive = _nyeda.bundl()
         import colorama
@@ -279,11 +286,13 @@ def nyeda():
         print(colorama.Fore.BLUE + 'Built:' + colorama.Fore.RESET, archive)
         colorama.deinit()
     else:
-        if sys.platform == 'win32':
-            getsuperuser()
+        getsuperuser()
         _nyeda = Nyeda(cfg.source, cfg.destination)
         archive = _nyeda.bundl()
         import colorama
         colorama.init()
         print(colorama.Fore.BLUE + 'Built:' + colorama.Fore.RESET, archive)
         colorama.deinit()
+
+if __name__ == '__main__':
+    nyeda()
