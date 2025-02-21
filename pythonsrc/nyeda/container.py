@@ -1,11 +1,17 @@
 
+import ctypes
+import sys
+import os
+
+# If the given platform is windows, (as the app wont be windowed (due to some packaging error in current packager)), close the
+# terminal if present.
+if sys.platform == 'win32':
+    ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+
 from nyeda.features.interface.segmenter import segmenter
 from nyeda.types import ArchByte, ArchByteInt
 from typing import Union
 from pathlib import Path
-
-import sys
-import os
 
 DATA: Union[ArchByte[ArchByteInt], bytes]
 
