@@ -170,3 +170,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 *.lock
+data
+dist
+.DS_Store

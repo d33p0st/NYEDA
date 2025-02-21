@@ -1,0 +1,2 @@
+conda install -c conda-forge conda-pack
+conda pack -n nyeda-macos -o nyeda-macos-arm64.tar.gz
